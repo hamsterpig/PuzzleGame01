@@ -12,7 +12,7 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 	JButton[] btnUnit = new JButton[12];
 	boolean[] btnCheck;
 	int checkCount=0;
-	JLabel scoreText, hintText;
+	JLabel scoreText, hintText, wrongText;
 	int score=0;
 	int[] answer;
 	int[] flag = new int[btnUnit.length];
@@ -21,6 +21,7 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 	int[] anwTemp = new int[2];
 	int[] btnUnitNum;
 	int hintCNT;
+	int Wrong=0;
 	
 	PuzzleGame01(){
 		this.setLocationRelativeTo(null);
@@ -97,7 +98,7 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 		pa_s_e.add(pScore);
 		
 		JPanel pHint = new JPanel();
-		JLabel JlabelHint = new JLabel("Hint count :");
+		JLabel JlabelHint = new JLabel("Hint :");
 		hintText = new JLabel();
 		hintText.setPreferredSize(new Dimension(70,20));
 		hintText.setEnabled(false);
@@ -110,6 +111,21 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 		pHint.add(hintText);
 		//pHint.setBackground(Color.GRAY);
 		pa_s_w.add(pHint);
+		
+		JPanel pwrong = new JPanel();
+		JLabel Jlabelwrong = new JLabel("wrong :");
+		wrongText = new JLabel();
+		wrongText.setPreferredSize(new Dimension(70,20));
+		wrongText.setEnabled(false);
+		wrongText.setText("0");
+		wrongText.setBackground(Color.white);
+		wrongText.setForeground(Color.yellow);
+		wrongText.setOpaque(true);
+		wrongText.setHorizontalAlignment(JLabel.CENTER);
+		pwrong.add(Jlabelwrong);
+		pwrong.add(wrongText);
+		//pHint.setBackground(Color.GRAY);
+		pa_s_c.add(pwrong);
 		
 		
 	} // PuzzleGame() END
@@ -124,7 +140,7 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 	
 	private void ifClear(int n){
 		
-			if(anwTempflag[0]==anwTempflag[1]){ // clear on
+			if(anwTempflag[0]==anwTempflag[1]){ // clear ok
 				isClear[anwTemp[0]]=true;
 				isClear[anwTemp[1]]=true;
 				btnCheck[anwTemp[0]] = false;
@@ -138,19 +154,21 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 				score += 1;
 				scoreText.setText(Integer.toString(score));
 			} else {
-				
-			}
-			
-			for(int j=0; j<btnUnit.length;j++){ //false -> all non Check
-				if(isClear[j]==false){
-					btnUnit[j].setBackground(new Color(80,80,255));
-					btnCheck[j]=false;
-					btnUnit[j].setText("");
-					repaint();
-					revalidate();					
+				for(int j=0; j<btnUnit.length;j++){ //false -> all non Check
+					if(isClear[j]==false){
+						btnUnit[j].setBackground(new Color(80,80,255));
+						btnCheck[j]=false;
+						btnUnit[j].setText("");
+						String setFlag = Integer.toString(flag[n]);
+						btnUnit[anwTemp[1]].setText(setFlag);
+						Wrong += 1;
+						repaint();
+						revalidate();					
+					}
 				}
 			}
-			System.out.println("ifClear");
+			
+			System.out.println("ifClear"); // Initialization
 			anwTempflag[0]=1000;
 			anwTempflag[1]=1000;
 			anwTemp[0]=1000;
@@ -185,6 +203,9 @@ public class PuzzleGame01 extends FrameD implements ActionListener{
 			btnCheck[n]=true;
 			checkCount +=1;
 			ifClear(n);
+
+			
+			
 		}else if(checkCount>=2){ // √ ±‚»≠
 			//ifClear(n);
 		}
