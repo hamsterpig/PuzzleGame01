@@ -6,17 +6,17 @@ public class ThreadTime extends Thread {
 			try {
 				if(stop){
 					break; // exit run
-				} else {
+				} else if(!stop){
 					Thread.sleep(100);
 					PuzzleGame01.setSecond(i);
-					if(i>=9){
+					if(i>=9 && !stop){
 						i = 0;
 					}
 				}
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("타이머 종료");
 			}
 		}
 	}

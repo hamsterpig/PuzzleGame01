@@ -10,30 +10,35 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 	JPanel pa;
 	JPanel pa_c, pa_n, pa_s, pa_w, p_e;
 	JPanel pa_s_e, pa_s_w, pa_s_c, pa_s_s;
+	
 	JButton[] btnUnit = new JButton[12];
 	JButton btnReset;
 	
 	boolean[] btnCheck;
-	int checkCount=0;
+	boolean[] isClear;
+	
 	JLabel scoreText, hintText, wrongText;
 	private static JLabel secondText;
-	int score=0;
+	
 	int[] answer;
 	int[] flag = new int[btnUnit.length];
-	boolean[] isClear;
 	int[] anwTempflag = new int[2];
 	int[] anwTemp = new int[2];
 	int[] btnUnitNum;
+	
+	int checkCount=0;
+	int score=0;
 	int hintCNT;
 	int Wrong=0;
+	
 	static int second;
 	
 	ThreadTime tt;
 	
 	PuzzleGame01(){
 		this.setLocationRelativeTo(null);
+		setTitle("퍼즐게임 ver0.1");
 		
-		setTitle("퍼즐게임");
 		pa = new JPanel(new BorderLayout());
 		pa_c = new JPanel(new GridLayout(4,4));
 		pa_n = new JPanel();
@@ -66,23 +71,22 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 			btnUnit[i] = new JButton();
 			btnUnit[i].setPreferredSize(new Dimension(100,100));
 			btnUnit[i].setBackground(new Color(80,80,255));
-			pa_c.add(btnUnit[i]);
 			btnCheck[i] = false;
 			btnUnit[i].addActionListener(this);
 			btnUnit[i].setForeground(Color.white);
 			isClear[i] = false;
 			btnUnitNum[i] = i;
+			pa_c.add(btnUnit[i]);
 		}
 		int Shuffle = (int)(btnUnit.length/2); //6
 		
 
 		for(int i=0; i<btnUnit.length;i++){
 			flag[i]=i;
-			 //F1~11 = 0~6 0~6
+			 //F1~11 = 0~5 0~5
 			if(i>(Shuffle-1)){
 				flag[i] = flag[i]-(Shuffle);
 			}
-			
 		}
 		
 		for(int i=0; i<30;i++){ //i
@@ -178,7 +182,6 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 	}
 	
 	private void ifClear(int n){
-		
 			if(anwTempflag[0]==anwTempflag[1]){ // clear ok
 				isClear[anwTemp[0]]=true;
 				isClear[anwTemp[1]]=true;
@@ -192,9 +195,7 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 				checkCount=0;
 				score += 1;
 				scoreText.setText(Integer.toString(score));
-				
 				jDialog_Victory();
-				
 			} else {
 				for(int j=0; j<btnUnit.length;j++){ //false -> all non Check
 					if(isClear[j]==false){
@@ -211,27 +212,24 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 				Wrong += 1;
 				wrongText.setText(Integer.toString(Wrong));
 			}
-			
 			System.out.println("ifClear"); // Initialization
 			anwTempflag[0]=1000;
 			anwTempflag[1]=1000;
 			anwTemp[0]=1000;
 			anwTemp[1]=1000;
 			checkCount=0;
-		
 	} //isClear
 	
 	private void jDialog_Victory() {
 		// TODO Auto-generated method stub
 		if(score>=6){ // clear
 			tt.stop = true;
-			
+
 			 int result = JOptionPane.showConfirmDialog(null, "틀림: "+wrongText.getText()
 					 +" 힌트 :"+hintText.getText() + " 시간(초): " + second +
-					 "\n최종 점수: " + ((score*80)-(hintCNT*8)-(Wrong*13)-second)
-					 +"\n대단해요~~!\n다시 도전해볼까요~??", "!! Victory",
-                     JOptionPane.OK_CANCEL_OPTION);
-			 		
+					 "\n최종 점수: " + ((score*200)-(hintCNT*8)-(Wrong*13)-second)
+					 +"\n대단해요~~!\n다시 도전해볼까요~?", "! Victory !",
+                     JOptionPane.OK_CANCEL_OPTION);	
 			 if(result==0){
 				 reStart();
 			 }
@@ -240,6 +238,9 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 
 	private void reStart() {
 		// TODO Auto-generated method stub
+		tt.stop();
+		tt.interrupt();
+		
 		for(int i=0;i<btnUnit.length;i++){
 			btnUnit[i].setPreferredSize(new Dimension(100,100));
 			btnUnit[i].setBackground(new Color(80,80,255));
@@ -262,6 +263,10 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 		 secondText.setText(Integer.toString(second));
 		 wrongText.setText(Integer.toString(Wrong));
 		 hintText.setText(Integer.toString(hintCNT));
+		 
+		 anwTempflag[0] = 10000;
+		 anwTempflag[1] = 10000;
+		 checkCount = 0;
 		 
 		 tt = new ThreadTime();
 		 tt.start();
@@ -293,13 +298,9 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 			btnCheck[n]=true;
 			checkCount +=1;
 			ifClear(n);
-
-			
-			
 		}else if(checkCount>=2){ // 초기화
 			//ifClear(n);
 		}
-		
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -319,7 +320,6 @@ public class PuzzleGame01 extends JFrame implements ActionListener{
 				}
 			}
 		}
-		
 	}
 
 }
